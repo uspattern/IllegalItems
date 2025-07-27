@@ -68,7 +68,6 @@ public class ItemProtectionListener implements Listener {
             }
         }
 
-        // Shift-клик
         if (e.isShiftClick()) {
             if (ItemFilter.containsNestedInventoryHolder(current)
                     || ItemFilter.isInventoryHolder(current)
@@ -79,7 +78,6 @@ public class ItemProtectionListener implements Listener {
             return;
         }
 
-        // Обычный клик
         if (!isPlayerInventory) {
             if (ItemFilter.containsNestedInventoryHolder(current) && cursor.getType().isAir()) {
                 e.setCancelled(true);

@@ -128,7 +128,6 @@ public class ItemFilter {
 
         boolean changed = false;
 
-        // Сначала проверим, если item — книга, обрежем сразу
         if (item.getItemMeta() instanceof BookMeta bookMeta) {
             List<Component> pages = bookMeta.pages();
             if (pages.size() > 1) {
@@ -138,14 +137,12 @@ public class ItemFilter {
             }
         }
 
-        // Если это холдер, проверим вложенный инвентарь
         if (item.getItemMeta() instanceof BlockStateMeta meta) {
             BlockState state = meta.getBlockState();
             if (state instanceof InventoryHolder holder) {
                 for (ItemStack content : holder.getInventory().getContents()) {
                     if (content == null || content.getType().isAir()) continue;
 
-                    // Рекурсивно обрезаем книги в содержимом — ВАЖНО: передаем content, а не item
                     boolean nestedChanged = trimBooksInHolder(content);
                     if (nestedChanged) changed = true;
                 }
