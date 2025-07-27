@@ -9,7 +9,7 @@
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>Test20065</name>
+  <name>IllegalItems</name>
 
   <properties>
     <java.version>16</java.version>
