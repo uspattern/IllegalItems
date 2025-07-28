@@ -1,4 +1,4 @@
-name: Test20065
+name: IllegalItems
 version: '${project.version}'
 main: uk.pattern.IllegalItems.Test20065
 api-version: '1.20'

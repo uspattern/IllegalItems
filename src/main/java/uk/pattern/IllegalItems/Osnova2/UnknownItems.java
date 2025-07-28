@@ -4,8 +4,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -37,6 +40,26 @@ public class UnknownItems implements Listener {
         if (isIllegalItem(cursorItem)) {
             e.setCancelled(true);
             player.setItemOnCursor(null);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPickup(EntityPickupItemEvent e) {
+        if (!(e.getEntity() instanceof Player)) return;
+
+        ItemStack item = e.getItem().getItemStack();
+        if (isIllegalItem(item)) {
+            e.setCancelled(true);
+            e.getItem().remove();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryMoveItem(InventoryMoveItemEvent e) {
+        ItemStack item = e.getItem();
+        if (isIllegalItem(item)) {
+            e.setCancelled(true);
+            e.getSource().removeItem(item);
         }
     }
 

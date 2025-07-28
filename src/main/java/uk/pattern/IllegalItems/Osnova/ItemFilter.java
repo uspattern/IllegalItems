@@ -1,6 +1,8 @@
 package uk.pattern.IllegalItems.Osnova;
 
-import net.minecraft.nbt.*;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import net.minecraft.nbt.NBTCompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.*;
@@ -11,19 +13,24 @@ import org.bukkit.inventory.meta.BookMeta;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemFilter {
     public static int MAX_BYTES;
+    public static int MAX_NBT_SIZE_KB;
 
     public static void loadConfig(Plugin plugin) {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
 
         MAX_BYTES = plugin.getConfig().getInt("max_bytes", 2048);
+        MAX_NBT_SIZE_KB = plugin.getConfig().getInt("max_nbt_size_kb", 100);
+
     }
 
+    @SuppressWarnings("unused")
     public static boolean isBad(ItemStack item, Plugin plugin) {
         if (item == null || item.getType().isAir()) return false;
 
@@ -31,12 +38,13 @@ public class ItemFilter {
             BlockState state = meta.getBlockState();
             if (state instanceof InventoryHolder holder) {
                 for (ItemStack content : holder.getInventory().getContents()) {
-                    if (isBad(content, plugin)) return true;
+                    if (content == null || content.getType().isAir()) continue;
+                    if (isBad(content, plugin)) return true; // Рекурсия!
                 }
             }
         }
 
-        return hasMagic(item) || isTooBig(item, plugin);
+        return hasMagic(item) || isTooBig(item);
     }
 
     public static boolean hasMagic(ItemStack item) {
@@ -55,7 +63,7 @@ public class ItemFilter {
                 if (lore != null) components.addAll(lore);
             }
         } catch (Throwable t) {
-            return false;
+            return true;
         }
 
         return containsMagic(components);
@@ -70,25 +78,43 @@ public class ItemFilter {
                 String legacy = LegacyComponentSerializer.legacySection().serialize(comp);
                 if (legacy.contains("§k")) return true;
             } catch (Throwable ignored) {
-                return false;
+                return true;
             }
         }
 
         return false;
     }
 
-    public static boolean isTooBig(ItemStack item, Plugin plugin) {
+
+    @SuppressWarnings({"unused", "deprecation"})
+    public static boolean isTooBig(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+
         try {
-            var nms = CraftItemStack.asNMSCopy(item);
-            var tag = new NBTTagCompound();
-            nms.b(tag);
-            var out = new ByteArrayOutputStream();
-            NBTCompressedStreamTools.a(tag, out);
-            int size = out.size();
-            return size > MAX_BYTES;
-        } catch (Throwable t) {
-            plugin.getLogger().warning("NBT size check failed: " + t.getMessage());
-            return true;
+            NBTItem nbti = new NBTItem(item);
+            String fullNbtString = nbti.toString();
+            int fullSizeBytes = fullNbtString.getBytes(StandardCharsets.UTF_8).length;
+            int fullSizeKb = fullSizeBytes / 1024;
+
+            if (fullSizeKb > MAX_NBT_SIZE_KB) return true;
+
+            try {
+                var nms = CraftItemStack.asNMSCopy(item);
+                var tag = new NBTTagCompound();
+                nms.b(tag);
+                var out = new ByteArrayOutputStream();
+                NBTCompressedStreamTools.a(tag, out);
+                int nmsSize = out.size();
+                int nmsSizeKb = nmsSize / 1024;
+
+
+                return nmsSize > MAX_BYTES || nmsSizeKb > MAX_NBT_SIZE_KB;
+            } catch (Throwable ignored) {
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -157,7 +183,26 @@ public class ItemFilter {
 
         return changed;
     }
+
+
+    @SuppressWarnings("unused")
+    public static boolean cleanHolderIfTooBig(ItemStack holderItem, ItemStack addingItem, Plugin plugin) {
+
+        if (holderItem == null || holderItem.getType().isAir()) return false;
+        if (!(holderItem.getItemMeta() instanceof BlockStateMeta meta)) return false;
+        BlockState state = meta.getBlockState();
+        if (!(state instanceof InventoryHolder holder)) return false;
+
+        for (ItemStack content : holder.getInventory().getContents()) {
+            if (isTooBig(content)) return true;
+        }
+
+        return isTooBig(addingItem);
+    }
 }
+
+
+
 
 
 
