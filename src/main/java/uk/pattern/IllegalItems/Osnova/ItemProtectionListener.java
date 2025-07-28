@@ -3,15 +3,12 @@ package uk.pattern.IllegalItems.Osnova;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import uk.pattern.IllegalItems.Test20065;
-import org.bukkit.event.inventory.ClickType;
 
 public class ItemProtectionListener implements Listener {
     private final Test20065 plugin;
@@ -37,8 +34,8 @@ public class ItemProtectionListener implements Listener {
         if (!cursor.getType().isAir()) {
             if (ItemFilter.cleanHolderIfTooBig(cursor, null, plugin)
                     || ItemFilter.containsNestedInventoryHolder(cursor)
-                    || ItemFilter.trimBooksInHolder(cursor)
                     || ItemFilter.isTooBig(cursor)
+                    || ItemFilter.trimBooksInHolder(cursor)
                     || ItemFilter.isBad(cursor, plugin)) {
                 e.setCursor(null);
                 e.setCancelled(true);
@@ -118,26 +115,27 @@ public class ItemProtectionListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
-        Inventory inventory = e.getInventory();
+        PlayerInventory playerInv = e.getPlayer().getInventory();
 
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = inventory.getItem(i);
+        for (int i = 0; i < playerInv.getSize(); i++) {
+            ItemStack item = playerInv.getItem(i);
 
             if (item == null || item.getType().isAir()) continue;
 
-            if (ItemFilter.containsNestedInventoryHolder(item)
+            if (ItemFilter.isTooBig(item)
+                    || ItemFilter.isBad(item, plugin)
+                    || ItemFilter.trimBooksInHolder(item)
                     || ItemFilter.cleanHolderIfTooBig(item, null, plugin)
-                    || ItemFilter.isTooBig(item)
-                    || ItemFilter.isBad(item, plugin)) {
-                inventory.setItem(i, null);
+                    || ItemFilter.containsNestedInventoryHolder(item)) {
+                playerInv.setItem(i, null);
             } else if (ItemFilter.trimBooksInHolder(item)) {
-                inventory.setItem(i, item);
+                playerInv.setItem(i, item);
             }
         }
     }
+
 
     @EventHandler
     public void onPickup(EntityPickupItemEvent e) {
@@ -150,7 +148,7 @@ public class ItemProtectionListener implements Listener {
             e.getItem().setItemStack(item);
         }
 
-        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.isTooBig(item) || ItemFilter.isBad(item, plugin)) {
+        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.containsNestedInventoryHolder(item)  || ItemFilter.trimBooksInHolder(item) || ItemFilter.isTooBig(item) || ItemFilter.isBad(item, plugin)) {
             e.setCancelled(true);
             e.getItem().remove();
         }
@@ -159,7 +157,7 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onAutoMove(InventoryMoveItemEvent e) {
         ItemStack item = e.getItem();
-        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.isTooBig(item) || ItemFilter.isInventoryHolder(item) || ItemFilter.isBad(item, plugin)) {
+        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.containsNestedInventoryHolder(item) || ItemFilter.trimBooksInHolder(item) || ItemFilter.isTooBig(item) || ItemFilter.isInventoryHolder(item) || ItemFilter.isBad(item, plugin)) {
             e.setCancelled(true);
         }
     }
