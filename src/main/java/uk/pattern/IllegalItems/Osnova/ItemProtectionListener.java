@@ -1,5 +1,8 @@
 package uk.pattern.IllegalItems.Osnova;
 
+import org.bukkit.Material;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,7 +11,10 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import uk.pattern.IllegalItems.Test20065;
+
+import static uk.pattern.IllegalItems.Osnova.ItemFilter.isInventoryHolder;
 
 public class ItemProtectionListener implements Listener {
     private final Test20065 plugin;
@@ -54,7 +60,8 @@ public class ItemProtectionListener implements Listener {
             if (itemToCheck != null && !itemToCheck.getType().isAir()) {
                 if (ItemFilter.cleanHolderIfTooBig(itemToCheck, null, plugin)
                         || ItemFilter.containsNestedInventoryHolder(itemToCheck)
-                        || ItemFilter.isInventoryHolder(itemToCheck)
+                        || isInventoryHolder(itemToCheck)
+                        || ItemFilter.isTooBig(itemToCheck)
                         || ItemFilter.isBad(itemToCheck, plugin)) {
                     e.setCancelled(true);
                     return;
@@ -62,7 +69,7 @@ public class ItemProtectionListener implements Listener {
             }
 
             if (type == ClickType.NUMBER_KEY && !isPlayerInventory) {
-                if (ItemFilter.containsNestedInventoryHolder(current) || ItemFilter.isInventoryHolder(current)) {
+                if (ItemFilter.containsNestedInventoryHolder(current) || ItemFilter.isTooBig(current) || isInventoryHolder(current)) {
                     e.setCancelled(true);
                     return;
                 }
@@ -72,7 +79,7 @@ public class ItemProtectionListener implements Listener {
         if (e.isShiftClick()) {
             if (ItemFilter.cleanHolderIfTooBig(current, null, plugin)
                     || ItemFilter.containsNestedInventoryHolder(current)
-                    || ItemFilter.isInventoryHolder(current)
+                    || isInventoryHolder(current)
                     || ItemFilter.isBad(current, plugin)) {
                 e.setCancelled(true);
                 return;
@@ -86,12 +93,12 @@ public class ItemProtectionListener implements Listener {
                 e.setCurrentItem(null);
                 return;
             }
-            if (ItemFilter.isInventoryHolder(current) && cursor.getType().isAir()) {
+            if (isInventoryHolder(current) && cursor.getType().isAir()) {
                 e.setCancelled(true);
                 e.setCurrentItem(null);
                 return;
             }
-            if (ItemFilter.isInventoryHolder(cursor)) {
+            if (isInventoryHolder(cursor)) {
                 e.setCancelled(true);
                 e.setCursor(null);
                 return;
@@ -115,7 +122,8 @@ public class ItemProtectionListener implements Listener {
         }
     }
 
-    @EventHandler
+
+        @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
         PlayerInventory playerInv = e.getPlayer().getInventory();
 
@@ -133,6 +141,24 @@ public class ItemProtectionListener implements Listener {
             } else if (ItemFilter.trimBooksInHolder(item)) {
                 playerInv.setItem(i, item);
             }
+        }
+    }
+
+    @EventHandler
+    public void onCreativeInventory(InventoryCreativeEvent event) {
+        ItemStack item = event.getCursor();
+        if (!item.getType().isBlock()) return;
+        if (!(item.getItemMeta() instanceof BlockStateMeta meta)) return;
+
+        Material type = item.getType();
+
+        if (type != Material.CHEST && type != Material.TRAPPED_CHEST && type != Material.ENDER_CHEST && type != Material.BARREL) return;
+
+        BlockState state = meta.getBlockState();
+        if (!(state instanceof Container container)) return;
+
+        if (!container.getInventory().isEmpty()) {
+            event.setCancelled(true);
         }
     }
 
@@ -157,7 +183,7 @@ public class ItemProtectionListener implements Listener {
     @EventHandler
     public void onAutoMove(InventoryMoveItemEvent e) {
         ItemStack item = e.getItem();
-        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.containsNestedInventoryHolder(item) || ItemFilter.trimBooksInHolder(item) || ItemFilter.isTooBig(item) || ItemFilter.isInventoryHolder(item) || ItemFilter.isBad(item, plugin)) {
+        if (ItemFilter.cleanHolderIfTooBig(item, null, plugin) || ItemFilter.containsNestedInventoryHolder(item) || ItemFilter.trimBooksInHolder(item) || ItemFilter.isTooBig(item) || isInventoryHolder(item) || ItemFilter.isBad(item, plugin)) {
             e.setCancelled(true);
         }
     }
