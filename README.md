@@ -10,3 +10,7 @@
 
 # What versions does it work on?
 - The plugin was written and tested only on versions 1.20+, it is not guaranteed to work on versions below, due to the use of NMS for versions 1.20+
+
+# For the future:
+- Reworking some methods, because their essence does not make sense at all..
+- Further optimizations..
