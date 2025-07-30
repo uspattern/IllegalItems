@@ -48,7 +48,7 @@ public class UnknownItems implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
 
         ItemStack item = e.getItem().getItemStack();
-        if (isIllegalItem(item)) {
+        if (isIllegalItem(item) || CAttributeCheck.hasBadAttributes(item)) {
             e.setCancelled(true);
             e.getItem().remove();
         }
