@@ -3,6 +3,7 @@ package uk.pattern.IllegalItems.Osnova;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.minecraft.nbt.NBTCompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.*;
@@ -44,7 +45,7 @@ public class ItemFilter {
             }
         }
 
-        return hasMagic(item) || isTooBig(item);
+        return hasMagic(item) || isTooBig(item) || hasIllegalSignData(item);
     }
 
     public static boolean hasMagic(ItemStack item) {
@@ -198,6 +199,21 @@ public class ItemFilter {
         }
 
         return isTooBig(addingItem);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static boolean hasIllegalSignData(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+
+        Material type = item.getType();
+        if (!type.name().contains("_SIGN")) return false;
+
+        try {
+            NBTItem nbtItem = new NBTItem(item);
+            return nbtItem.hasKey("BlockEntityTag");
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 }
 
