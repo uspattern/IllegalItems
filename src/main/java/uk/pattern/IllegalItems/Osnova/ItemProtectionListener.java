@@ -150,17 +150,17 @@ public class ItemProtectionListener implements Listener {
         if (!item.getType().isBlock()) return;
         if (!(item.getItemMeta() instanceof BlockStateMeta meta)) return;
 
-        Material type = item.getType();
-
-        if (type != Material.CHEST && type != Material.TRAPPED_CHEST && type != Material.ENDER_CHEST && type != Material.BARREL) return;
-
         BlockState state = meta.getBlockState();
         if (!(state instanceof Container container)) return;
+
+        Material type = item.getType();
+        if (type.name().endsWith("SHULKER_BOX")) return;
 
         if (!container.getInventory().isEmpty()) {
             event.setCancelled(true);
         }
     }
+
 
 
     @EventHandler
