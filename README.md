@@ -1,6 +1,6 @@
 # Why is this necessary at all?
-- This plugin is designed to fix unwanted items as stated in the description, can only be used on servers with full creative access, contains fixes for holders with large data, heavy items, items with unwanted data, enchantments/potions beyond vanilla level, etc.
-
+- This plugin is designed to fix unwanted items as stated in the description, can only be used on servers with full creative access, contains fixes for owners with large amounts of data, heavy items, items with unwanted data, items with unwanted attributes, enchants/potions above vanilla level, etc.
+  
 # What's the point? They exist on the Internet - LPX, ExploitFixer, IllegalStack, Panilla, etc
 - The problem is that they don't fix it deeply, no matter how hard you try, no matter how you tweak the settings there, it won't get rid of such items, only partly, plugins like IllegalStack, Panilla, but there is a separate example of how LPX, ExploitFixer, there you can already configure it so that it deletes such items, but that's not the problem, it will simply kill all creativity as a whole, no item with custom data can be taken, be it an item that opens a menu when clicked
 
