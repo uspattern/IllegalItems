@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.pattern.IllegalItems.Osnova.ItemFilter;
 import uk.pattern.IllegalItems.Osnova.ItemProtectionListener;
+import uk.pattern.IllegalItems.Osnova2.CAttributeCheck;
 import uk.pattern.IllegalItems.Osnova2.UnknownItems;
 
 import java.io.File;
@@ -21,6 +22,7 @@ public class Test20065 extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new UnknownItems(this), this);
+        getServer().getPluginManager().registerEvents(new CAttributeCheck(), this);
     }
 
     public void loadItemsConfig() {
