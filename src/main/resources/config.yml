@@ -37,8 +37,6 @@ enchant-limits:
   bane_of_arthropods: 5
   blast_protection: 4
   channeling: 1
-  curse_of_binding: 1
-  curse_of_vanishing: 1
   depth_strider: 3
   efficiency: 5
   feather_falling: 4
@@ -55,7 +53,6 @@ enchant-limits:
   luck_of_the_sea: 3
   lure: 3
   mending: 1
-  multi_shot: 1
   piercing: 4
   power: 5
   projectile_protection: 4
