@@ -148,7 +148,7 @@ public class ItemProtectionListener implements Listener {
     @SuppressWarnings("ConstantConditions")
     public void onCreativeInventory(InventoryCreativeEvent event) {
         ItemStack item = event.getCursor();
-        if (item == null || item.getType().isAir()) return; // Добавлена проверка
+        if (item == null || item.getType().isAir()) return;
 
         if (!item.getType().isBlock()) return;
         if (!(item.getItemMeta() instanceof BlockStateMeta meta)) return;
