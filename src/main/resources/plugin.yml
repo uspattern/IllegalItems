@@ -2,3 +2,5 @@ name: IllegalItems
 version: '${project.version}'
 main: uk.pattern.IllegalItems.Test20065
 api-version: '1.20'
+author: pattern
+description: The plugin aims to fix all the unwanted items
