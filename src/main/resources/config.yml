@@ -5,5 +5,69 @@
 #    ██║██║░░░░░██║░░░░░██╔══╝░░██║░░╚██╗██╔══██║██║░░░░░╚════╝██║░░░██║░░░██╔══╝░░██║╚██╔╝██║░╚═══██╗░░░
 #    ██║███████╗███████╗███████╗╚██████╔╝██║░░██║███████╗░░░░░░██║░░░██║░░░███████╗██║░╚═╝░██║██████╔╝██╗
 #    ╚═╝╚══════╝╚══════╝╚══════╝░╚═════╝░╚═╝░░╚═╝╚══════╝░░░░░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░░░░╚═╝╚═════╝░╚═╝
-max_bytes: 2048 # The recommended value is 2048
-max_nbt_size_kb: 100 # Adjust as you see fit
+#
+# The recommended value is 2048
+max_bytes: 2048
+# The recommended value is 100
+max_nbt_size_kb: 100
+# Permitted types of potions
+allowed-potions:
+  - WATER
+  - AWKWARD
+  - THICK
+  - MUNDANE
+  - NIGHT_VISION
+  - INVISIBILITY
+  - JUMP
+  - FIRE_RESISTANCE
+  - SPEED
+  - SLOWNESS
+  - WATER_BREATHING
+  - INSTANT_HEAL
+  - INSTANT_DAMAGE
+  - POISON
+  - REGEN
+  - STRENGTH
+  - WEAKNESS
+  - TURTLE_MASTER
+  - SLOW_FALLING
+# The maximum level of enchantments that can be applied to an item
+enchant-limits:
+  aqua_affinity: 1
+  bane_of_arthropods: 5
+  blast_protection: 4
+  channeling: 1
+  curse_of_binding: 1
+  curse_of_vanishing: 1
+  depth_strider: 3
+  efficiency: 5
+  feather_falling: 4
+  fire_aspect: 2
+  fire_protection: 4
+  flame: 1
+  fortune: 3
+  frost_walker: 2
+  impaling: 5
+  infinity: 1
+  knockback: 2
+  looting: 3
+  loyalty: 3
+  luck_of_the_sea: 3
+  lure: 3
+  mending: 1
+  multi_shot: 1
+  piercing: 4
+  power: 5
+  projectile_protection: 4
+  protection: 4
+  punch: 2
+  quick_charge: 3
+  respiration: 3
+  riptide: 3
+  silk_touch: 1
+  smite: 5
+  soul_speed: 3
+  sweeping: 3
+  thorns: 3
+  unbreaking: 3
+  vanishing_curse: 1

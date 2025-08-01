@@ -5,24 +5,24 @@
 #    ██║██║░░░░░██║░░░░░██╔══╝░░██║░░╚██╗██╔══██║██║░░░░░╚════╝██║░░░██║░░░██╔══╝░░██║╚██╔╝██║░╚═══██╗░░░
 #    ██║███████╗███████╗███████╗╚██████╔╝██║░░██║███████╗░░░░░░██║░░░██║░░░███████╗██║░╚═╝░██║██████╔╝██╗
 #    ╚═╝╚══════╝╚══════╝╚══════╝░╚═════╝░╚═╝░░╚═╝╚══════╝░░░░░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░░░░╚═╝╚═════╝░╚═╝
-max-enchant-level: 5 # The maximum level of enchantments that can be applied to an item
-allowed-potions:
-  - WATER
-  - AWKWARD
-  - THICK
-  - MUNDANE
-  - NIGHT_VISION
-  - INVISIBILITY
-  - JUMP
-  - FIRE_RESISTANCE
-  - SPEED
-  - SLOWNESS
-  - WATER_BREATHING
-  - INSTANT_HEAL
-  - INSTANT_DAMAGE
-  - POISON
-  - REGEN
-  - STRENGTH
-  - WEAKNESS
-  - TURTLE_MASTER
-  - SLOW_FALLING
+#max-enchant-level: 5 # The maximum level of enchantments that can be applied to an item
+#allowed-potions:
+#  - WATER
+#  - AWKWARD
+#  - THICK
+#  - MUNDANE
+#  - NIGHT_VISION
+#  - INVISIBILITY
+#  - JUMP
+#  - FIRE_RESISTANCE
+#  - SPEED
+#  - SLOWNESS
+#  - WATER_BREATHING
+#  - INSTANT_HEAL
+#  - INSTANT_DAMAGE
+#  - POISON
+#  - REGEN
+#  - STRENGTH
+#  - WEAKNESS
+#  - TURTLE_MASTER
+#  - SLOW_FALLING
