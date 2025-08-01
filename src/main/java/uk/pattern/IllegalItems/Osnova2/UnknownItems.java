@@ -11,9 +11,10 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionType;
+import org.bukkit.potion.PotionData;
 import uk.pattern.IllegalItems.Test20065;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,17 +69,26 @@ public class UnknownItems implements Listener {
         if (item == null || !item.hasItemMeta()) return false;
 
         FileConfiguration config = plugin.getConfig();
-
-        List<String> allowedPotions = config.getStringList("allowed-potions");
+        List<String> allowedPotions = new ArrayList<>(config.getStringList("allowed-potions"));
         if (allowedPotions.isEmpty()) {
             allowedPotions.add("WATER");
         }
 
         if (item.getItemMeta() instanceof PotionMeta meta) {
-            PotionType type = meta.getBasePotionData().getType();
-            if (!allowedPotions.contains(type.name()) || !meta.getCustomEffects().isEmpty()) {
-                return true;
+            PotionData data = meta.getBasePotionData();
+            String potionKey = data.getType().name().toUpperCase();
+
+            if (allowedPotions.contains(potionKey)) {
+                return !meta.getCustomEffects().isEmpty();
             }
+
+            String potionNBTName = data.getType().name().toLowerCase();
+
+            if (potionNBTName.equals("uncraftable") && allowedPotions.contains("EMPTY")) {
+                return !meta.getCustomEffects().isEmpty();
+            }
+
+            return true;
         }
 
         for (Map.Entry<Enchantment, Integer> enchant : item.getEnchantments().entrySet()) {
